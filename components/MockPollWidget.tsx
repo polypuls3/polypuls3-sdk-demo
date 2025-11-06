@@ -30,6 +30,10 @@ export interface MockPollWidgetProps {
   successMessage?: string
   successDuration?: number
   enableConfetti?: boolean
+  chartType?: 'bar' | 'pie' | 'infographic'
+  barOrientation?: 'horizontal' | 'vertical'
+  infographicStyle?: 'icons' | 'leaderboard' | 'cards'
+  chartColors?: string[]
 }
 
 /**
@@ -49,6 +53,10 @@ export function MockPollWidget({
   successMessage,
   successDuration = 3000,
   enableConfetti = false,
+  chartType,
+  barOrientation,
+  infographicStyle,
+  chartColors,
 }: MockPollWidgetProps) {
   const [hasVoted, setHasVoted] = useState(false)
   const [userVote, setUserVote] = useState<number | undefined>()
@@ -219,7 +227,14 @@ export function MockPollWidget({
 
             {showActualResults ? (
               // Show actual results with vote counts and percentages
-              <MockPollResults options={poll.options} votes={mockVotes} />
+              <MockPollResults
+                options={poll.options}
+                votes={mockVotes}
+                chartType={chartType}
+                barOrientation={barOrientation}
+                infographicStyle={infographicStyle}
+                chartColors={chartColors}
+              />
             ) : (
               // Show message without revealing results data
               <div className="pp-p-4 pp-bg-muted/50 pp-rounded-polypuls3 pp-text-center">

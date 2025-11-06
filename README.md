@@ -35,7 +35,7 @@ npm run dev
 
 ## Features
 
-This demo includes three main pages:
+This demo includes five main pages:
 
 ### Home Page (/)
 - Demonstrates the `PollWidget` component
@@ -51,6 +51,24 @@ This demo includes three main pages:
 - Demonstrates the `useSubgraphPolls` hook
 - Shows all polls from The Graph subgraph
 - Uses the `PollCard` component for displaying poll previews
+
+### Features Demo Page (/features)
+- Demonstrates v0.4.8+ features with mock data
+- Shows different display modes (vote, result, mixed)
+- Demonstrates results visibility controls
+- Shows success banner and confetti effects
+- Uses `MockPollWidget` for reliable demonstrations without blockchain dependency
+
+### Playground Page (/playground)
+- **Interactive testing environment** for all widget settings
+- Real-time controls for customizing poll widgets:
+  - Display modes and visibility settings
+  - Chart types and styles (bar, pie, infographic)
+  - Success effects (banners and confetti)
+  - Widget sizing options
+- **Live code preview** showing exact props for your configuration
+- **Copy to clipboard** functionality for easy integration
+- Perfect for experimenting before implementing in your app
 
 ## SDK Components Used
 

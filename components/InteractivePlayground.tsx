@@ -351,6 +351,10 @@ export function InteractivePlayground() {
             successMessage={settings.successMessage || undefined}
             successDuration={settings.successDuration}
             enableConfetti={settings.enableConfetti}
+            chartType={settings.chartType}
+            barOrientation={settings.barOrientation}
+            infographicStyle={settings.infographicStyle}
+            chartColors={settings.useCustomColors ? settings.chartColors : undefined}
           />
         </div>
 
