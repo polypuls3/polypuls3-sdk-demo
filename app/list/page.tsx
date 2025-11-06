@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useChainId } from 'wagmi'
 import { usePollsList, PollWidget } from '@polypuls3/sdk'
 import { ConnectButton } from '@/components/ConnectButton'
 import { DataSourceToggle } from '@/components/DataSourceToggle'
@@ -8,6 +9,7 @@ import { ThemeSelector } from '@/components/ThemeSelector'
 import Link from 'next/link'
 
 export default function ListPage() {
+  const chainId = useChainId()
   const [dataSourceKey, setDataSourceKey] = useState(0)
 
   // Listen for data source changes to trigger re-fetch
@@ -111,6 +113,7 @@ export default function ListPage() {
               <PollWidget
                 key={poll.id.toString()}
                 pollId={poll.id}
+                chainId={chainId}
               />
             ))}
           </div>
