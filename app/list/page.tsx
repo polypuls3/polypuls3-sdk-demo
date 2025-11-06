@@ -1,17 +1,16 @@
 'use client'
 
-import { useSubgraphPolls } from '@polypuls3/sdk/hooks'
-import { PollCard } from '@polypuls3/sdk/components'
+import { usePollsList, PollCard } from '@polypuls3/sdk'
 import { ConnectButton } from '@/components/ConnectButton'
+import { DataSourceToggle } from '@/components/DataSourceToggle'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 export default function ListPage() {
   const router = useRouter()
-  const { polls, loading, error } = useSubgraphPolls({
-    first: 20,
-    orderBy: 'createdAt',
-    orderDirection: 'desc',
+  const { polls, isLoading, error, activeSource } = usePollsList({
+    limit: 20,
+    offset: 0,
   })
 
   return (
@@ -51,13 +50,25 @@ export default function ListPage() {
 
       <main className="max-w-6xl mx-auto">
         <div className="mb-6">
-          <h2 className="text-2xl font-semibold mb-2">Active Polls</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            Click on any poll to view details and vote.
-          </p>
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <h2 className="text-2xl font-semibold mb-2">Active Polls</h2>
+              <p className="text-gray-600 dark:text-gray-400">
+                Click on any poll to view details and vote.
+              </p>
+              {activeSource && (
+                <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+                  Loading from: <span className="font-semibold">{activeSource}</span>
+                </p>
+              )}
+            </div>
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+              <DataSourceToggle />
+            </div>
+          </div>
         </div>
 
-        {loading && (
+        {isLoading && (
           <div className="text-center py-12">
             <p className="text-gray-600 dark:text-gray-400">Loading polls...</p>
           </div>
@@ -69,25 +80,20 @@ export default function ListPage() {
           </div>
         )}
 
-        {!loading && !error && polls && polls.length === 0 && (
+        {!isLoading && !error && polls && polls.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-600 dark:text-gray-400">No polls found.</p>
           </div>
         )}
 
-        {!loading && !error && polls && polls.length > 0 && (
+        {!isLoading && !error && polls && polls.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {polls.map((poll) => (
-              <div
+              <PollCard
                 key={poll.id.toString()}
-                className="cursor-pointer transform transition-transform hover:scale-105"
+                poll={poll}
                 onClick={() => router.push(`/?poll=${poll.id}`)}
-              >
-                <PollCard
-                  pollId={BigInt(poll.id)}
-                  onClick={() => router.push(`/?poll=${poll.id}`)}
-                />
-              </div>
+              />
             ))}
           </div>
         )}
@@ -95,16 +101,22 @@ export default function ListPage() {
         <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
           <h3 className="font-semibold mb-2">SDK Usage Example:</h3>
           <pre className="text-sm overflow-x-auto">
-            {`const { polls, loading, error } = useSubgraphPolls({
-  first: 20,
-  orderBy: 'createdAt',
-  orderDirection: 'desc',
+            {`// Unified hook that respects data source configuration
+const { polls, isLoading, error, activeSource } = usePollsList({
+  limit: 20,
+  offset: 0,
+})
+
+// Or override the global setting
+const { polls } = usePollsList({
+  limit: 20,
+  dataSource: 'subgraph' // 'contract', 'subgraph', or 'auto'
 })
 
 {polls?.map((poll) => (
   <PollCard
     key={poll.id}
-    pollId={poll.id}
+    poll={poll}
     onClick={() => viewPoll(poll.id)}
   />
 ))}`}

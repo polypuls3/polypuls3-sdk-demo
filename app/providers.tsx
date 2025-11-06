@@ -4,7 +4,8 @@ import { WagmiProvider, createConfig, http } from 'wagmi'
 import { polygon, polygonAmoy } from 'wagmi/chains'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { injected, walletConnect } from 'wagmi/connectors'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
+import { PolypulsProvider, type DataSource } from '@polypuls3/sdk'
 
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!
 
@@ -33,10 +34,36 @@ const config = createConfig({
 const queryClient = new QueryClient()
 
 export function Providers({ children }: { children: ReactNode }) {
+  // Get initial data source from localStorage if available
+  const [dataSource, setDataSource] = useState<DataSource>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('polypuls3-data-source') as DataSource) || 'auto'
+    }
+    return 'auto'
+  })
+
+  // Create a context value that includes the setter
+  const contextValue = {
+    dataSource,
+    setDataSource: (source: DataSource) => {
+      setDataSource(source)
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('polypuls3-data-source', source)
+      }
+    },
+  }
+
+  // Make this available globally for the settings component
+  if (typeof window !== 'undefined') {
+    ;(window as any).__polypuls3DataSource = contextValue
+  }
+
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        {children}
+        <PolypulsProvider dataSourceConfig={{ source: dataSource }}>
+          {children}
+        </PolypulsProvider>
       </QueryClientProvider>
     </WagmiProvider>
   )
