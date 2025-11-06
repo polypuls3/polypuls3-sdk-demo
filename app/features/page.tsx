@@ -1,8 +1,19 @@
 'use client'
 
-import { PollWidget } from '@polypuls3/sdk/components'
+import { MockPollWidget } from '@/components/MockPollWidget'
 import { ConnectButton } from '@/components/ConnectButton'
 import Link from 'next/link'
+
+// Mock poll data for demos
+const MOCK_POLL = {
+  question: 'What is your favorite web3 framework?',
+  category: 'Development',
+  options: ['Next.js', 'React', 'Vue.js', 'Svelte'],
+  votes: [45, 32, 18, 12],
+  status: 'active' as const,
+  expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+  createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+}
 
 export default function FeaturesDemo() {
   return (
@@ -12,7 +23,7 @@ export default function FeaturesDemo() {
           <div>
             <h1 className="text-4xl font-bold mb-2">v0.4.8 Features Demo</h1>
             <p className="text-gray-600 dark:text-gray-400">
-              Display Modes, Success Banner & Confetti
+              Display Modes, Success Banner & Confetti (Mock Data)
             </p>
           </div>
           <ConnectButton />
@@ -43,7 +54,20 @@ export default function FeaturesDemo() {
           >
             Features Demo
           </Link>
+          <Link
+            href="/playground"
+            className="px-4 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
+          >
+            Playground
+          </Link>
         </nav>
+
+        <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+          <p className="text-sm text-blue-800 dark:text-blue-200">
+            📝 <strong>Note:</strong> This demo uses mock data to ensure features work reliably without blockchain dependency.
+            All interactions are simulated client-side only.
+          </p>
+        </div>
       </header>
 
       <main className="max-w-6xl mx-auto">
@@ -68,8 +92,8 @@ export default function FeaturesDemo() {
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                 Shows only voting interface, auto-switches to results after voting
               </p>
-              <PollWidget
-                pollId={1n}
+              <MockPollWidget
+                poll={MOCK_POLL}
                 displayMode="vote"
                 onVoteSuccess={() => console.log('Vote mode: Success!')}
               />
@@ -87,8 +111,8 @@ export default function FeaturesDemo() {
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                 Always shows results interface (no voting)
               </p>
-              <PollWidget
-                pollId={1n}
+              <MockPollWidget
+                poll={MOCK_POLL}
                 displayMode="result"
               />
               <pre className="mt-3 text-xs bg-gray-100 dark:bg-gray-800 p-2 rounded overflow-x-auto">
@@ -105,8 +129,8 @@ export default function FeaturesDemo() {
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                 Auto-switches based on vote status
               </p>
-              <PollWidget
-                pollId={1n}
+              <MockPollWidget
+                poll={MOCK_POLL}
                 displayMode="mixed"
               />
               <pre className="mt-3 text-xs bg-gray-100 dark:bg-gray-800 p-2 rounded overflow-x-auto">
@@ -133,8 +157,8 @@ export default function FeaturesDemo() {
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                 Shows "You've voted" message without revealing data
               </p>
-              <PollWidget
-                pollId={1n}
+              <MockPollWidget
+                poll={MOCK_POLL}
                 displayMode="mixed"
                 showResults={false}
               />
@@ -153,8 +177,8 @@ export default function FeaturesDemo() {
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                 Customize the message shown when results are hidden
               </p>
-              <PollWidget
-                pollId={1n}
+              <MockPollWidget
+                poll={MOCK_POLL}
                 displayMode="result"
                 showResults={false}
                 resultsHiddenMessage="Results will be revealed after the poll closes!"
@@ -185,8 +209,8 @@ export default function FeaturesDemo() {
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                 Shows a slide-in banner with custom message
               </p>
-              <PollWidget
-                pollId={1n}
+              <MockPollWidget
+                poll={MOCK_POLL}
                 displayMode="vote"
                 successMessage="Your voice matters! Vote recorded."
                 onVoteSuccess={() => console.log('Banner shown!')}
@@ -204,10 +228,10 @@ export default function FeaturesDemo() {
             <div>
               <h4 className="font-semibold mb-2">Confetti Celebration</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                Trigger confetti animation on successful vote (premium theme only by default)
+                Trigger confetti animation on successful vote
               </p>
-              <PollWidget
-                pollId={1n}
+              <MockPollWidget
+                poll={MOCK_POLL}
                 displayMode="vote"
                 enableConfetti={true}
                 onVoteSuccess={() => console.log('Confetti triggered!')}
@@ -227,8 +251,8 @@ export default function FeaturesDemo() {
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                 Disable the success banner completely
               </p>
-              <PollWidget
-                pollId={1n}
+              <MockPollWidget
+                poll={MOCK_POLL}
                 displayMode="vote"
                 showSuccessBanner={false}
                 onVoteSuccess={() => console.log('No banner shown')}
@@ -248,8 +272,8 @@ export default function FeaturesDemo() {
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                 Control how long the success banner stays visible
               </p>
-              <PollWidget
-                pollId={1n}
+              <MockPollWidget
+                poll={MOCK_POLL}
                 displayMode="vote"
                 successDuration={5000}
                 successMessage="Banner stays for 5 seconds!"
@@ -273,8 +297,8 @@ export default function FeaturesDemo() {
           </p>
 
           <div className="max-w-2xl mx-auto">
-            <PollWidget
-              pollId={1n}
+            <MockPollWidget
+              poll={MOCK_POLL}
               displayMode="vote"
               showResults={true}
               successMessage="Thank you for participating!"
@@ -305,6 +329,7 @@ export default function FeaturesDemo() {
             </div>
           </div>
         </section>
+
 
         {/* Behavior Table */}
         <section className="mb-12">
