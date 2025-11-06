@@ -23,7 +23,7 @@ export function ThemeSelector() {
     }
   }
 
-  const themes = {
+  const themes: Record<ThemePreset, { label: string; description: string; color: string }> = {
     minimal: {
       label: 'Minimal',
       description: 'Clean, flat design',
@@ -33,6 +33,11 @@ export function ThemeSelector() {
       label: 'Premium',
       description: 'Gradients & effects',
       color: 'bg-purple-600',
+    },
+    custom: {
+      label: 'Custom',
+      description: 'Custom theme',
+      color: 'bg-blue-600',
     },
   }
 

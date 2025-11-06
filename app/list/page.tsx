@@ -1,14 +1,27 @@
 'use client'
 
-import { usePollsList, PollCard } from '@polypuls3/sdk'
+import { useState, useEffect } from 'react'
+import { usePollsList, PollWidget } from '@polypuls3/sdk'
 import { ConnectButton } from '@/components/ConnectButton'
 import { DataSourceToggle } from '@/components/DataSourceToggle'
 import { ThemeSelector } from '@/components/ThemeSelector'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
 export default function ListPage() {
-  const router = useRouter()
+  const [dataSourceKey, setDataSourceKey] = useState(0)
+
+  // Listen for data source changes to trigger re-fetch
+  useEffect(() => {
+    const context = (window as any).__polypuls3DataSource
+    if (context) {
+      const originalSetDataSource = context.setDataSource
+      context.setDataSource = (source: any) => {
+        originalSetDataSource(source)
+        setDataSourceKey((prev) => prev + 1) // Force re-fetch
+      }
+    }
+  }, [])
+
   const { polls, isLoading, error, activeSource } = usePollsList({
     limit: 20,
     offset: 0,
@@ -55,7 +68,7 @@ export default function ListPage() {
             <div>
               <h2 className="text-2xl font-semibold mb-2">Active Polls</h2>
               <p className="text-gray-600 dark:text-gray-400">
-                Click on any poll to view details and vote.
+                Vote directly on any poll below.
               </p>
               {activeSource && (
                 <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
@@ -93,12 +106,11 @@ export default function ListPage() {
         )}
 
         {!isLoading && !error && polls && polls.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div key={dataSourceKey} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {polls.map((poll) => (
-              <PollCard
+              <PollWidget
                 key={poll.id.toString()}
-                poll={poll}
-                onClick={() => router.push(`/?poll=${poll.id}`)}
+                pollId={poll.id}
               />
             ))}
           </div>
@@ -107,23 +119,17 @@ export default function ListPage() {
         <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
           <h3 className="font-semibold mb-2">SDK Usage Example:</h3>
           <pre className="text-sm overflow-x-auto">
-            {`// Unified hook that respects data source configuration
+            {`// Fetch list of polls
 const { polls, isLoading, error, activeSource } = usePollsList({
   limit: 20,
   offset: 0,
 })
 
-// Or override the global setting
-const { polls } = usePollsList({
-  limit: 20,
-  dataSource: 'subgraph' // 'contract', 'subgraph', or 'auto'
-})
-
+// Render as embedded voting widgets
 {polls?.map((poll) => (
-  <PollCard
+  <PollWidget
     key={poll.id}
-    poll={poll}
-    onClick={() => viewPoll(poll.id)}
+    pollId={poll.id}
   />
 ))}`}
           </pre>
