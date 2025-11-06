@@ -3,6 +3,7 @@
 import { usePollsList, PollCard } from '@polypuls3/sdk'
 import { ConnectButton } from '@/components/ConnectButton'
 import { DataSourceToggle } from '@/components/DataSourceToggle'
+import { ThemeSelector } from '@/components/ThemeSelector'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -62,8 +63,13 @@ export default function ListPage() {
                 </p>
               )}
             </div>
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-              <DataSourceToggle />
+            <div className="flex flex-col gap-4">
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                <ThemeSelector />
+              </div>
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                <DataSourceToggle />
+              </div>
             </div>
           </div>
         </div>
