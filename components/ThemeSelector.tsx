@@ -19,8 +19,7 @@ export function ThemeSelector() {
     const context = (window as any).__polypuls3Theme
     if (context?.setTheme) {
       context.setTheme(newTheme)
-      // Reload to apply new theme
-      window.location.reload()
+      // React will handle the update automatically
     }
   }
 

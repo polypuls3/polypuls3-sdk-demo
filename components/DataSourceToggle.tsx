@@ -19,8 +19,7 @@ export function DataSourceToggle() {
     const context = (window as any).__polypuls3DataSource
     if (context?.setDataSource) {
       context.setDataSource(source)
-      // Reload to apply new setting
-      window.location.reload()
+      // React will handle the update automatically
     }
   }
 
