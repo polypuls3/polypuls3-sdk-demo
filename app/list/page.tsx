@@ -62,6 +62,12 @@ export default function ListPage() {
           >
             Poll List
           </Link>
+          <Link
+            href="/features"
+            className="px-4 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
+          >
+            v0.4.8 Features
+          </Link>
         </nav>
       </header>
 

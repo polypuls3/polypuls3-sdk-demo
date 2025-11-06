@@ -37,6 +37,12 @@ export default function Home() {
           >
             Poll List
           </Link>
+          <Link
+            href="/features"
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            v0.4.8 Features
+          </Link>
         </nav>
       </header>
 
